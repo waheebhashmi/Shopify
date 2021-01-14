@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shopify Challenge</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+html {
+  display:-webkit-box;
+  display:flex;
+  height:100vh;
+  font-family: "Avenir Next", "Helvetica Neue", Arial, -apple-system, Roboto, sans-serif;
+  background-color: #80daeb;
+  scroll-behavior: smooth;
+}
+
+.button {
+  border: 1px solid;
+  overflow: hidden;
+  position: relative;
+}
+.button span {
+  z-index: 20;
+}
+.button:after {
+  background: #fff;
+  content: "";
+  height: 155px;
+  left: -75px;
+  opacity: 0.2;
+  position: absolute;
+  top: -50px;
+  transform: rotate(35deg);
+  transition: all 550ms cubic-bezier(0.19, 1, 0.22, 1);
+  width: 50px;
+  z-index: -10;
+}
+
+.button:hover:after {
+  left: 120%;
+  transition: all 550ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+.search-bar {
+  -moz-transition: all 0.5s cubic-bezier(0.7, 0.03, 0.17, 0.97) 0.25s;
+  -o-transition: all 0.5s cubic-bezier(0.7, 0.03, 0.17, 0.97) 0.25s;
+  -webkit-transition: all 0.5s cubic-bezier(0.7, 0.03, 0.17, 0.97);
+  -webkit-transition-delay: 0.25s;
+  transition: all 0.5s cubic-bezier(0.7, 0.03, 0.17, 0.97) 0.25s;
+  position: relative;
+  width: 300px;
+  height: 50px;
+  
+}
+.search-bar input {
+  outline: none;
+  box-shadow: none;
+  height: 50px;
+  line-height: 50px;
+  width: 100%;
+  padding: 0 1em;
+  box-sizing: border-box;
+  background: transparent;
+  color: white;
+  border: 4px solid white;
+  border-radius: 50px;
+}
+.search-bar .toggle {
+  -moz-transition: all 0.5s cubic-bezier(0.98, 0.02, 0.46, 0.99) 0.25s;
+  -o-transition: all 0.5s cubic-bezier(0.98, 0.02, 0.46, 0.99) 0.25s;
+  -webkit-transition: all 0.5s cubic-bezier(0.98, 0.02, 0.46, 0.99);
+  -webkit-transition-delay: 0.25s;
+  transition: all 0.5s cubic-bezier(0.98, 0.02, 0.46, 0.99) 0.25s;
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  right: 0;
+  top: 0;
+  border-radius: 50px;
+}
+.search-bar .toggle .toggle:after, .search-bar .toggle .toggle:before {
+  border-color: #ee6da3;
+}
+.search-bar .toggle:after, .search-bar .toggle:before {
+  -moz-transition: all 1s;
+  -o-transition: all 1s;
+  -webkit-transition: all 1s;
+  transition: all 1s;
+  content: '';
+  display: block;
+  position: absolute;
+  right: 0;
+  width: 0;
+  height: 25px;
+  border-left: 4px solid white;
+  border-radius: 4px;
+  top: 0;
+}
+.search-bar .toggle:before {
+  -moz-animation: close-one-reverse 0.85s 1 normal cubic-bezier(1, 0.01, 0.46, 1.48);
+  -webkit-animation: close-one-reverse 0.85s 1 normal cubic-bezier(1, 0.01, 0.46, 1.48);
+  animation: close-one-reverse 0.85s 1 normal cubic-bezier(1, 0.01, 0.46, 1.48);
+  -moz-transform: translate(-25px, 12.5px) rotate(45deg);
+  -ms-transform: translate(-25px, 12.5px) rotate(45deg);
+  -webkit-transform: translate(-25px, 12.5px) rotate(45deg);
+  transform: translate(-25px, 12.5px) rotate(45deg);
+}
+.column {
+  float: left;
+ 
+}
+.search-bar .toggle:after {
+  -moz-animation: close-two-reverse 0.85s 1 normal cubic-bezier(1, 0.01, 0.46, 1.48);
+  -webkit-animation: close-two-reverse 0.85s 1 normal cubic-bezier(1, 0.01, 0.46, 1.48);
+  animation: close-two-reverse 0.85s 1 normal cubic-bezier(1, 0.01, 0.46, 1.48);
+  -moz-transform: translate(-25px, 12.5px) rotate(-45deg);
+  -ms-transform: translate(-25px, 12.5px) rotate(-45deg);
+  -webkit-transform: translate(-25px, 12.5px) rotate(-45deg);
+  transform: translate(-25px, 12.5px) rotate(-45deg);
+}
+.search-bar.closed {
+  width: 50px;
+}
+.search-bar.closed input {
+  color: #E62878;
+}
+.search-bar.closed .toggle:before {
+  -moz-animation: close-one 0.85s 1 normal cubic-bezier(1, 0.01, 0.46, 1.48);
+  -webkit-animation: close-one 0.85s 1 normal cubic-bezier(1, 0.01, 0.46, 1.48);
+  animation: close-one 0.85s 1 normal cubic-bezier(1, 0.01, 0.46, 1.48);
+  height: 0px;
+  -moz-transform: translate(-8px, 8px) rotate(45deg);
+  -ms-transform: translate(-8px, 8px) rotate(45deg);
+  -webkit-transform: translate(-8px, 8px) rotate(45deg);
+  transform: translate(-8px, 8px) rotate(45deg);
+}
+.search-bar.closed .toggle:after {
+  -moz-animation: close-two 0.85s 1 normal cubic-bezier(1, 0.01, 0.46, 1.48);
+  -webkit-animation: close-two 0.85s 1 normal cubic-bezier(1, 0.01, 0.46, 1.48);
+  animation: close-two 0.85s 1 normal cubic-bezier(1, 0.01, 0.46, 1.48);
+  height: 25px;
+  -moz-transform: translate(0, 37.5px) rotate(-45deg);
+  -ms-transform: translate(0, 37.5px) rotate(-45deg);
+  -webkit-transform: translate(0, 37.5px) rotate(-45deg);
+  transform: translate(0, 37.5px) rotate(-45deg);
+}
+
+@-moz-keyframes close-one {
+  0% {
+    height: 25px;
+    -moz-transform: translate(-25px, 12.5px) rotate(45deg);
+    transform: translate(-25px, 12.5px) rotate(45deg);
+  }
+  10% {
+    height: 25px;
+    -moz-transform: translate(-25px, 12.5px) rotate(45deg);
+    transform: translate(-25px, 12.5px) rotate(45deg);
+  }
+  60% {
+    height: 0px;
+    -moz-transform: translate(-8px, 8px) rotate(45deg);
+    transform: translate(-8px, 8px) rotate(45deg);
+  }
+  100% {
+    height: 0px;
+    -moz-transform: translate(-8px, 8px) rotate(45deg);
+    transform: translate(-8px, 8px) rotate(45deg);
+  }
+}
+@-webkit-keyframes close-one {
+  0% {
+    height: 25px;
+    -webkit-transform: translate(-25px, 12.5px) rotate(45deg);
+    transform: translate(-25px, 12.5px) rotate(45deg);
+  }
+  10% {
+    height: 25px;
+    -webkit-transform: translate(-25px, 12.5px) rotate(45deg);
+    transform: translate(-25px, 12.5px) rotate(45deg);
+  }
+  60% {
+    height: 0px;
+    -webkit-transform: translate(-8px, 8px) rotate(45deg);
+    transform: translate(-8px, 8px) rotate(45deg);
+  }
+  100% {
+    height: 0px;
+    -webkit-transform: translate(-8px, 8px) rotate(45deg);
+    transform: translate(-8px, 8px) rotate(45deg);
+  }
+}
+@keyframes close-one {
+  0% {
+    height: 25px;
+    -moz-transform: translate(-25px, 12.5px) rotate(45deg);
+    -ms-transform: translate(-25px, 12.5px) rotate(45deg);
+    -webkit-transform: translate(-25px, 12.5px) rotate(45deg);
+    transform: translate(-25px, 12.5px) rotate(45deg);
+  }
+  10% {
+    height: 25px;
+    -moz-transform: translate(-25px, 12.5px) rotate(45deg);
+    -ms-transform: translate(-25px, 12.5px) rotate(45deg);
+    -webkit-transform: translate(-25px, 12.5px) rotate(45deg);
+    transform: translate(-25px, 12.5px) rotate(45deg);
+  }
+  60% {
+    height: 0px;
+    -moz-transform: translate(-8px, 8px) rotate(45deg);
+    -ms-transform: translate(-8px, 8px) rotate(45deg);
+    -webkit-transform: translate(-8px, 8px) rotate(45deg);
+    transform: translate(-8px, 8px) rotate(45deg);
+  }
+  100% {
+    height: 0px;
+    -moz-transform: translate(-8px, 8px) rotate(45deg);
+    -ms-transform: translate(-8px, 8px) rotate(45deg);
+    -webkit-transform: translate(-8px, 8px) rotate(45deg);
+    transform: translate(-8px, 8px) rotate(45deg);
+  }
+}
+@-moz-keyframes close-two {
+  0% {
+    height: 25px;
+    -moz-transform: translate(-25px, 12.5px) rotate(-45deg);
+    transform: translate(-25px, 12.5px) rotate(-45deg);
+  }
+  60% {
+    height: 2px;
+    -moz-transform: translate(-6px, 37.5px) rotate(-45deg);
+    transform: translate(-6px, 37.5px) rotate(-45deg);
+  }
+  70% {
+    height: 2px;
+    -moz-transform: translate(-6px, 37.5px) rotate(-45deg);
+    transform: translate(-6px, 37.5px) rotate(-45deg);
+  }
+  100% {
+    height: 25px;
+    -moz-transform: translate(0, 37.5px) rotate(-45deg);
+    transform: translate(0, 37.5px) rotate(-45deg);
+  }
+}
+@-webkit-keyframes close-two {
+  0% {
+    height: 25px;
+    -webkit-transform: translate(-25px, 12.5px) rotate(-45deg);
+    transform: translate(-25px, 12.5px) rotate(-45deg);
+  }
+  60% {
+    height: 2px;
+    -webkit-transform: translate(-6px, 37.5px) rotate(-45deg);
+    transform: translate(-6px, 37.5px) rotate(-45deg);
+  }
+  70% {
+    height: 2px;
+    -webkit-transform: translate(-6px, 37.5px) rotate(-45deg);
+    transform: translate(-6px, 37.5px) rotate(-45deg);
+  }
+  100% {
+    height: 25px;
+    -webkit-transform: translate(0, 37.5px) rotate(-45deg);
+    transform: translate(0, 37.5px) rotate(-45deg);
+  }
+}
+@keyframes close-two {
+  0% {
+    height: 25px;
+    -moz-transform: translate(-25px, 12.5px) rotate(-45deg);
+    -ms-transform: translate(-25px, 12.5px) rotate(-45deg);
+    -webkit-transform: translate(-25px, 12.5px) rotate(-45deg);
+    transform: translate(-25px, 12.5px) rotate(-45deg);
+  }
+  60% {
+    height: 2px;
+    -moz-transform: translate(-6px, 37.5px) rotate(-45deg);
+    -ms-transform: translate(-6px, 37.5px) rotate(-45deg);
+    -webkit-transform: translate(-6px, 37.5px) rotate(-45deg);
+    transform: translate(-6px, 37.5px) rotate(-45deg);
+  }
+  70% {
+    height: 2px;
+    -moz-transform: translate(-6px, 37.5px) rotate(-45deg);
+    -ms-transform: translate(-6px, 37.5px) rotate(-45deg);
+    -webkit-transform: translate(-6px, 37.5px) rotate(-45deg);
+    transform: translate(-6px, 37.5px) rotate(-45deg);
+  }
+  100% {
+    height: 25px;
+    -moz-transform: translate(0, 37.5px) rotate(-45deg);
+    -ms-transform: translate(0, 37.5px) rotate(-45deg);
+    -webkit-transform: translate(0, 37.5px) rotate(-45deg);
+    transform: translate(0, 37.5px) rotate(-45deg);
+  }
+}
+@-moz-keyframes close-one-reverse {
+  0% {
+    height: 0px;
+    -moz-transform: translate(-8px, 8px) rotate(45deg);
+    transform: translate(-8px, 8px) rotate(45deg);
+  }
+  40% {
+    height: 0px;
+    -moz-transform: translate(-8px, 8px) rotate(45deg);
+    transform: translate(-8px, 8px) rotate(45deg);
+  }
+  80% {
+    height: 25px;
+    -moz-transform: translate(-25px, 12.5px) rotate(45deg);
+    transform: translate(-25px, 12.5px) rotate(45deg);
+  }
+  100% {
+    height: 25px;
+    -moz-transform: translate(-25px, 12.5px) rotate(45deg);
+    transform: translate(-25px, 12.5px) rotate(45deg);
+  }
+}
+@-webkit-keyframes close-one-reverse {
+  0% {
+    height: 0px;
+    -webkit-transform: translate(-8px, 8px) rotate(45deg);
+    transform: translate(-8px, 8px) rotate(45deg);
+  }
+  40% {
+    height: 0px;
+    -webkit-transform: translate(-8px, 8px) rotate(45deg);
+    transform: translate(-8px, 8px) rotate(45deg);
+  }
+  80% {
+    height: 25px;
+    -webkit-transform: translate(-25px, 12.5px) rotate(45deg);
+    transform: translate(-25px, 12.5px) rotate(45deg);
+  }
+  100% {
+    height: 25px;
+    -webkit-transform: translate(-25px, 12.5px) rotate(45deg);
+    transform: translate(-25px, 12.5px) rotate(45deg);
+  }
+}
+@keyframes close-one-reverse {
+  0% {
+    height: 0px;
+    -moz-transform: translate(-8px, 8px) rotate(45deg);
+    -ms-transform: translate(-8px, 8px) rotate(45deg);
+    -webkit-transform: translate(-8px, 8px) rotate(45deg);
+    transform: translate(-8px, 8px) rotate(45deg);
+  }
+  40% {
+    height: 0px;
+    -moz-transform: translate(-8px, 8px) rotate(45deg);
+    -ms-transform: translate(-8px, 8px) rotate(45deg);
+    -webkit-transform: translate(-8px, 8px) rotate(45deg);
+    transform: translate(-8px, 8px) rotate(45deg);
+  }
+  80% {
+    height: 25px;
+    -moz-transform: translate(-25px, 12.5px) rotate(45deg);
+    -ms-transform: translate(-25px, 12.5px) rotate(45deg);
+    -webkit-transform: translate(-25px, 12.5px) rotate(45deg);
+    transform: translate(-25px, 12.5px) rotate(45deg);
+  }
+  100% {
+    height: 25px;
+    -moz-transform: translate(-25px, 12.5px) rotate(45deg);
+    -ms-transform: translate(-25px, 12.5px) rotate(45deg);
+    -webkit-transform: translate(-25px, 12.5px) rotate(45deg);
+    transform: translate(-25px, 12.5px) rotate(45deg);
+  }
+}
+@-moz-keyframes close-two-reverse {
+  0% {
+    height: 25px;
+    -moz-transform: translate(0, 37.5px) rotate(-45deg);
+    transform: translate(0, 37.5px) rotate(-45deg);
+  }
+  40% {
+    height: 2px;
+    -moz-transform: translate(-6px, 40.5px) rotate(-45deg);
+    transform: translate(-6px, 40.5px) rotate(-45deg);
+  }
+  50% {
+    height: 2px;
+    -moz-transform: translate(-6px, 40.5px) rotate(-45deg);
+    transform: translate(-6px, 40.5px) rotate(-45deg);
+  }
+  100% {
+    height: 25px;
+    -moz-transform: translate(-25px, 12.5px) rotate(-45deg);
+    transform: translate(-25px, 12.5px) rotate(-45deg);
+  }
+}
+@-webkit-keyframes close-two-reverse {
+  0% {
+    height: 25px;
+    -webkit-transform: translate(0, 37.5px) rotate(-45deg);
+    transform: translate(0, 37.5px) rotate(-45deg);
+  }
+  40% {
+    height: 2px;
+    -webkit-transform: translate(-6px, 40.5px) rotate(-45deg);
+    transform: translate(-6px, 40.5px) rotate(-45deg);
+  }
+  50% {
+    height: 2px;
+    -webkit-transform: translate(-6px, 40.5px) rotate(-45deg);
+    transform: translate(-6px, 40.5px) rotate(-45deg);
+  }
+  100% {
+    height: 25px;
+    -webkit-transform: translate(-25px, 12.5px) rotate(-45deg);
+    transform: translate(-25px, 12.5px) rotate(-45deg);
+  }
+}
+@keyframes close-two-reverse {
+  0% {
+    height: 25px;
+    -moz-transform: translate(0, 37.5px) rotate(-45deg);
+    -ms-transform: translate(0, 37.5px) rotate(-45deg);
+    -webkit-transform: translate(0, 37.5px) rotate(-45deg);
+    transform: translate(0, 37.5px) rotate(-45deg);
+  }
+  40% {
+    height: 2px;
+    -moz-transform: translate(-6px, 40.5px) rotate(-45deg);
+    -ms-transform: translate(-6px, 40.5px) rotate(-45deg);
+    -webkit-transform: translate(-6px, 40.5px) rotate(-45deg);
+    transform: translate(-6px, 40.5px) rotate(-45deg);
+  }
+  50% {
+    height: 2px;
+    -moz-transform: translate(-6px, 40.5px) rotate(-45deg);
+    -ms-transform: translate(-6px, 40.5px) rotate(-45deg);
+    -webkit-transform: translate(-6px, 40.5px) rotate(-45deg);
+    transform: translate(-6px, 40.5px) rotate(-45deg);
+  }
+  100% {
+    height: 25px;
+    -moz-transform: translate(-25px, 12.5px) rotate(-45deg);
+    -ms-transform: translate(-25px, 12.5px) rotate(-45deg);
+    -webkit-transform: translate(-25px, 12.5px) rotate(-45deg);
+    transform: translate(-25px, 12.5px) rotate(-45deg);
+  }
+}
+
+</style>
+</head>
+
+<body>
+<section>
+ <div id="search-bar" class="search-bar">
+    <input type="text" id="search"/>
+    <div id="close" class="toggle"></div>
+            </div>
+        <section class="row">
+            <div id="app" class="column">
+                <h3>Results</h3>
+            </div>
+            <div id="clone" class="column">
+              <h2 id="txt"></h2>
+                <div id="nominations" name="nominations" class="container"></div>
+         <h3 id="count"></h3>
+            </div>
+        </section>
+    </section>
+<script>
+const app = document.getElementById('app')
+const container = document.createElement('div')
+
+app.appendChild(container)
+    $(document).ready(function() {
+        $("#search").keyup(function(event) {
+            if (event.keyCode === 13) { //enter for javascript
+                getMovie();
+            }
+        });
+    });
+
+    function getMovie() {
+        let request = new XMLHttpRequest();
+
+        let movieName = (document.getElementById("search").value);
+        request.open("GET", "http://www.omdbapi.com/?s=" + movieName + "&apikey=bc56d1a0")
+
+        request.onload = function() {
+            let response = JSON.parse(this.response);
+
+            let list = response.Search;
+
+            let newList = list.filter(function(item) { return item.Type == "movie"; });
+
+            newList.forEach((movie, index) => {
+
+                const mov = document.createElement('div')
+                mov.setAttribute('class', 'mov')
+                const h2 = document.createElement('h2')
+                h2.textContent = movie.Title
+                const p = document.createElement('p')
+                p.textContent = movie.Year
+
+                const movieText = document.createElement('div')
+                movieText.setAttribute("class", "movieText");
+
+                const movieImage = document.createElement("IMG");
+                movieImage.setAttribute("class", "movieImage");
+                movieImage.setAttribute("src", movie.Poster);
+
+                const btn = document.createElement('button')
+ 
+                btn.setAttribute('id', index)
+                btn.innerHTML = "Nominate";
+                btn.className = "button";
+                var txt = document.getElementById('txt')
+                txt.innerHTML = "Nominations List";
+                btn.onclick = Nomination;
+                
+
+                function Nomination() {
+                    var count = document.getElementById('count')
+                    var nominationCount = document.getElementById("nominations").childElementCount;
+                    var plus = 1
+                    var correction = nominationCount + plus;
+                    if(correction==5){
+                    count.innerHTML = "Nominations: " + correction + "/5"
+                    }
+
+                    btn.disabled = true
+                    var node = mov.cloneNode(true);
+                    var del = document.getElementById("nominations").appendChild(node);
+                    del.removeChild(del.lastChild);
+                    const b1 = document.createElement('button')
+    
+                    b1.innerHTML = "Remove Nomination Selection";
+                    b1.onclick = deleteNom;
+
+                    function deleteNom() {
+                      del.remove();
+                        btn.disabled = false
+                    }
+                    del.appendChild(b1)
+                }
+
+                container.appendChild(mov)
+                mov.appendChild(movieImage);
+                mov.appendChild(movieText)
+                movieText.appendChild(h2)
+                movieText.appendChild(p)
+                mov.appendChild(btn)
+            })
+        }
+
+        request.send()
+
+    }
+
+    </script>
+    <script>
+      $('#close').click(function(){
+  $(this).parent().toggleClass('closed');
+    $(this).prev().focus();
+});
+
+setTimeout(function() {
+    $('#close').click();
+}, 100);
+
+setTimeout(function() {
+    $('#close').click();
+}, 1500);
+</script>
+</body>
+</html>
